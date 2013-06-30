@@ -21,7 +21,7 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
-app.use(app.router);
+app.use('/whdoigo',app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only

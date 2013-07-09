@@ -20,7 +20,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
+app.use(express.cookieParser('whdoigo'));
 app.use(express.session());
 app.use('/whdoigo',app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,6 +33,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/services/test', services.test);
 app.get('/users', user.list);
+app.get('/upload', routes.upload);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

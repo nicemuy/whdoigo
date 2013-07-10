@@ -34,7 +34,7 @@ app.get('/', routes.index);
 app.get('/services/test', services.test);
 app.get('/users', user.list);
 app.get('/upload', routes.upload);
-app.get('/services/selectuser/:query', services.selectuser);
+app.get('/services/selectuser', services.selectuser);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

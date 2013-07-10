@@ -24,7 +24,7 @@ exports.test = function(req, res){
 exports.selectuser = function(req, res){
     pool.getConnection(function(err, connection) {
         // Use the connection
-        connection.query( 'SELECT userid,name,photo FROM member where userid = ? or name = ?',[req.params.query,req.params.query], function(err, rows) {
+        connection.query( 'SELECT userid,name,photo FROM member where userid = ? or name = ?',[req.query.q,req.query.q], function(err, rows) {
             connection.end();
             res.json(rows);
         });

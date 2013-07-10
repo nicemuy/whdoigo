@@ -23,7 +23,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('whdoigo'));
 app.use(express.session());
 app.use('/whdoigo',app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/whdoigo',express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {

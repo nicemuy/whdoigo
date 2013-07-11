@@ -33,7 +33,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/services/test', services.test);
 app.get('/users', user.list);
-app.get('/upload', routes.upload);
+app.post('/upload', routes.upload);
 app.get('/uploadForm', routes.uploadForm);
 app.get('/services/selectuser', services.selectuser);
 

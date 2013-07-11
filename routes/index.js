@@ -8,6 +8,7 @@ exports.index = function(req, res){
 };
 
 exports.upload = function(req, res){
+  console.log(req.files.file);
   res.send('ok success!');
 };
 

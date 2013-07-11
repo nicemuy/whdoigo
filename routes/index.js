@@ -8,5 +8,9 @@ exports.index = function(req, res){
 };
 
 exports.upload = function(req, res){
-  res.render('upload');
+  res.send('ok success!');
+};
+
+exports.uploadForm = function(req, res){
+    res.render('uploadForm');
 };

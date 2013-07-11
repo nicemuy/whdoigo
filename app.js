@@ -18,7 +18,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser());
+app.use(express.bodyParser({keepExtensions:true,uploadDir: __dirname+'/public/upload'}));
 app.use(express.methodOverride());
 app.use(express.cookieParser('whdoigo'));
 app.use(express.session());
@@ -34,6 +34,7 @@ app.get('/', routes.index);
 app.get('/services/test', services.test);
 app.get('/users', user.list);
 app.get('/upload', routes.upload);
+app.get('/uploadForm', routes.uploadForm);
 app.get('/services/selectuser', services.selectuser);
 
 http.createServer(app).listen(app.get('port'), function(){

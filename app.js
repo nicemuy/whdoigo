@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , services = require('./routes/services')
+  , gcm_server = require('./routes/gcm-server')
   , http = require('http')
   , path = require('path');
 
@@ -36,6 +37,8 @@ app.get('/users', user.list);
 app.post('/upload', routes.upload);
 app.get('/uploadForm', routes.uploadForm);
 app.get('/services/selectuser', services.selectuser);
+app.get('/gcm/register', gcm_server.register);
+app.get('/gcm/push', gcm_server.push);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

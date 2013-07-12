@@ -54,7 +54,9 @@ exports.push = function(req, res) {
                 registrationIds.push(rows[index].register_id);
             }
             sender.sendNoRetry(message, registrationIds, function (err, result) {
+                if(err) throw err;
                 console.log(result);
+                res.send('true');
             });
         });
     });

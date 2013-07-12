@@ -47,20 +47,16 @@ exports.push = function(req, res) {
 
 // At least one required
 
-    registrationIds.push('이곳은 register 함수에서 받은 regId 를 입력하는 부분입니다.');
-
-
-    /**
-
-     * Parameters: message-literal, registrationIds-array, No. of retries, callback-function
-
-     */
-
-    sender.sendNoRetry(message, registrationIds, function (err, result) {
-
-        console.log(result);
-
+    pool.getConnection(function(err, connection) {
+        // Use the connection
+        connection.query( 'SELECT * FROM register where party_id=?', [req.query.party_id], function(err, rows) {
+            for(var index in rows){
+                registrationIds.push(rows[index].register_id);
+            }
+            sender.sendNoRetry(message, registrationIds, function (err, result) {
+                console.log(result);
+            });
+        });
     });
-
 }
 

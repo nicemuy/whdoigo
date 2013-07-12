@@ -41,6 +41,9 @@ app.get('/users', user.list);
 app.post('/upload', routes.upload);
 app.get('/uploadForm', routes.uploadForm);
 app.get('/services/selectuser', services.selectuser);
+app.get('/services/createshare', services.createshare);
+app.get('/services/addshare', services.addshare);
+app.get('/services/joinparty', services.joinparty);
 app.get('/gcm/register', gcm_server.register);
 app.get('/gcm/push', gcm_server.push);
 

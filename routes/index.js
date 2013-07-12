@@ -1,4 +1,4 @@
-
+var path = require('path');
 /*
  * GET home page.
  */
@@ -8,7 +8,7 @@ exports.index = function(req, res){
 };
 
 exports.upload = function(req, res){
-  console.log(req.files.file);
+  console.log(path.basename(req.files.file.path));
   res.send('ok success!');
 };
 

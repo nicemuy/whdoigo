@@ -15,6 +15,7 @@ exports.register = function (req, res) {
         // Use the connection
         connection.query( 'INSERT INTO register(party_id,register_id) values(?,?)', [req.query.party_id,req.cookies.regId], function(err, rows) {
             connection.end();
+            console.log(req.query.party_id+" "+req.cookies.regId);
             res.send('true');
         });
     });

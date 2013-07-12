@@ -3,6 +3,10 @@
  * Module dependencies.
  */
 
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ' + err);
+});
+
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')

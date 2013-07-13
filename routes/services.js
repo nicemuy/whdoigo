@@ -45,9 +45,15 @@ exports.createshare = function(req, res){
             connection.query('INSERT INTO coordinate (sx, sy, location, party_id, memo) VALUES(?, ?, ?, ?, ?)',[req.body.sx,req.body.sy,req.body.location,party_id,req.body.memo],function(err, rows){
                 c_id = rows.insertId;
                 connection.query('INSERT INTO shared (c_id, picture, picture_memo, up_date) VALUES(?, ?, ?, now())',[c_id,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo],function(err, rows){
-                    console.log('success');
-                    connection.end();
-                    res.send('true');
+                    for(var i=0;i<req.body.userid.length;i++){
+                        connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.body.userid[i],party_id],function(err, rows){
+                            if(err) throw err;
+                            if(i == req.body.userid.length-1){
+                                connection.end();
+                                res.send('true');
+                            }
+                        });
+                    }
                 });
             });
         });

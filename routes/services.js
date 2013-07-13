@@ -73,10 +73,14 @@ exports.addshare = function(req, res){
 
 exports.joinparty = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.query.userid,req.query.party_id],function(err, rows){
-            console.log('success');
-            connection.end();
-            res.send('true');
-        });
+        for(var i=0;i<req.body.userid.length;i++){
+            connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.body.userid[i],req.body.party_id],function(err, rows){
+                if(err) throw err;
+                if(i == req.body.userid.length-1){
+                    connection.end();
+                    res.send('success');
+                }
+            });
+        }
     });
 }

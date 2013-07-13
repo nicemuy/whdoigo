@@ -43,7 +43,7 @@ app.get('/uploadForm', routes.uploadForm);
 app.get('/services/selectuser', services.selectuser);
 app.post('/services/createshare', services.createshare);
 app.post('/services/addshare', services.addshare);
-app.get('/services/joinparty', services.joinparty);
+app.post('/services/joinparty', services.joinparty);
 app.get('/gcm/register', gcm_server.register);
 app.get('/gcm/push', gcm_server.push);
 

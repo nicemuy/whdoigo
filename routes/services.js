@@ -44,6 +44,7 @@ exports.createshare = function(req, res){
                 c_id = rows.insertId;
                 connection.query('INSERT INTO shared (c_id, picture, picture_memo, up_date) VALUES(?, ?, ?, now())',[c_id,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo],function(err, rows){
                     console.log('success');
+                    res.send('true');
                 });
             });
         });
@@ -59,6 +60,7 @@ exports.addshare = function(req, res){
                 c_id = rows.insertId;
                 connection.query('INSERT INTO shared (c_id, picture, picture_memo, up_date) VALUES(?, ?, ?, now())',[c_id,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo],function(err, rows){
                     console.log('success');
+                    res.send('true');
                 });
             });
         });
@@ -69,6 +71,7 @@ exports.joinparty = function(req, res){
     pool.getConnection(function(err, connection) {
         connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.query.userid,req.query.party_id],function(err, rows){
             console.log('success');
+            res.send('true');
         });
     });
 }

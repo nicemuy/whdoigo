@@ -2,6 +2,8 @@ var mysql = require('mysql');
 
 var baseUrl = 'http://www.alsquare.com:3000/whdoigo/upload/';
 
+var path = require('path');
+
 var pool = mysql.createPool({
     host:'alsquare.com',
     port:3306,

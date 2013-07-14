@@ -33,7 +33,7 @@ exports.selectuser = function(req, res){
             res.json(rows);
         });
     });
-}
+};
 
 exports.createshare = function(req, res){
     var party_id;
@@ -46,19 +46,22 @@ exports.createshare = function(req, res){
                 c_id = rows.insertId;
                 connection.query('INSERT INTO shared (c_id, picture, picture_memo, up_date) VALUES(?, ?, ?, now())',[c_id,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo],function(err, rows){
                     for(var i=0;i<req.body.userid.length;i++){
-                        connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.body.userid[i],party_id],function(err, rows){
-                            if(err) throw err;
-                            if(i == req.body.userid.length-1){
-                                connection.end();
-                                res.send(200,'true');
-                            }
-                        });
+                        (function(){
+                            var j = i;
+                            connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.body.userid[j],party_id],function(err, rows){
+                                if(err) throw err;
+                                if(j == req.body.userid.length-1){
+                                    connection.end();
+                                    res.send(200,'true');
+                                }
+                            });
+                        })();
                     }
                 });
             });
         });
     });
-}
+};
 
 exports.addshare = function(req, res){
     var c_id;
@@ -75,4 +78,4 @@ exports.addshare = function(req, res){
             });
         });
     });
-}
+};

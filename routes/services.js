@@ -88,3 +88,12 @@ exports.addmember = function(req, res){
         });
     });
 };
+
+exports.getcoords = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'select * from coordinate where party_id = ?',[req.query.party_id], function(err, rows) {
+            connection.end();
+            res.send(200,'true');
+        });
+    });
+}

@@ -49,7 +49,7 @@ exports.push = function(req, res) {
 
     pool.getConnection(function(err, connection) {
         // Use the connection
-        connection.query( 'SELECT * FROM register where party_id=?', [req.query.party_id], function(err, rows) {
+        connection.query( 'SELECT * FROM member natural join member_party where party_id=?', [req.query.party_id], function(err, rows) {
             for(var index in rows){
                 registrationIds.push(rows[index].register_id);
             }

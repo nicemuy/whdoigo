@@ -79,3 +79,12 @@ exports.addshare = function(req, res){
         });
     });
 };
+
+exports.addmember = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'insert into member values(?,?,?,?,?)', [req.body.userid,req.body.pwd,req.body.name,req.body.photo,req.body.register_id],function(err, rows) {
+            connection.end();
+            res.send(200,'true');
+        });
+    });
+};

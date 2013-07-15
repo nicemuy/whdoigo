@@ -116,3 +116,12 @@ exports.login = function(req, res){
         });
     });
 }
+
+exports.addfriend = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'insert into friendlist(friend_id,userid) values(?,?)',[req.query.friend_id, req.query.userid], function(err, rows) {
+            connection.end();
+            res.send(200,'true');
+        });
+    });
+}

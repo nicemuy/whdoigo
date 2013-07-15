@@ -20,6 +20,8 @@ exports.test = function(req, res){
         // Use the connection
         connection.query( 'SELECT * FROM member', function(err, rows) {
             connection.end();
+            res.cookie('ddd','test');
+            res.cookie('ababab','dmdmdmdm');
             res.charset = "utf-8";
             res.json(rows);
         });

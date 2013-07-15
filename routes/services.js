@@ -100,3 +100,17 @@ exports.getcoords = function(req, res){
         });
     });
 }
+
+exports.login = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'select * from member where userid = ? and pwd = ?',[req.query.userid, req.query.pwd], function(err, rows) {
+            connection.end();
+            if(rows.length == 1){
+                req.session.userid = rows[0].userid;
+                res.send(200,'true');
+            }else{
+                res.send(200,'false');
+            }
+        });
+    });
+}

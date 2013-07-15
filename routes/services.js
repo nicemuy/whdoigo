@@ -20,6 +20,7 @@ exports.test = function(req, res){
         // Use the connection
         connection.query( 'SELECT * FROM member', function(err, rows) {
             connection.end();
+            res.charset = "utf-8";
             res.json(rows);
         });
     });
@@ -30,6 +31,7 @@ exports.selectuser = function(req, res){
         // Use the connection
         connection.query( 'SELECT userid,name,photo FROM member where userid like ? or name like ?',['%'+req.query.q+'%','%'+req.query.q+'%'], function(err, rows) {
             connection.end();
+            res.charset = "utf-8";
             res.json(rows);
         });
     });
@@ -82,7 +84,7 @@ exports.addshare = function(req, res){
 
 exports.addmember = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'insert into member values(?,?,?,?,?)', [req.body.userid,req.body.pwd,req.body.name,req.body.photo,req.body.register_id],function(err, rows) {
+        connection.query( 'insert into member values(?,?,?,?,?)', [req.body.userid,req.body.pwd,req.body.name,req.body.photo,req.cookies.regId],function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -93,7 +95,8 @@ exports.getcoords = function(req, res){
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from coordinate where party_id = ?',[req.query.party_id], function(err, rows) {
             connection.end();
-            res.send(200,'true');
+            res.charset = "utf-8";
+            res.json(rows);
         });
     });
 }

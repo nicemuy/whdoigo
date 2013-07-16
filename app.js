@@ -47,6 +47,8 @@ app.post('/services/addmember', services.addmember);
 app.get('/services/getimages', services.getimages);
 app.get('/services/notfriend', services.notfriend);
 app.get('/services/login', services.login);
+app.get('/services/deletefriend', services.deletefriend);
+app.get('/services/selectparty', services.selectparty);
 app.get('/services/addfriend', services.addfriend);
 app.get('/services/getcoords', services.getcoords);
 app.get('/services/groupmember', services.groupmember);

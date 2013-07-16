@@ -128,7 +128,7 @@ exports.addfriend = function(req, res){
 
 exports.notfriend = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select userid,name,photo from member where userid in select userid from friendlist where friend_id = ? and friend_id not in select friend_id from friendlist where userid = ?',[req.query.userid,req.query.userid], function(err, rows) {
+        connection.query( 'select userid,name,photo from member where userid in (select userid from friendlist where friend_id = ? and friend_id not in (select friend_id from friendlist where userid = ?))',[req.query.userid,req.query.userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);

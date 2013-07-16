@@ -101,12 +101,9 @@ exports.getcoords = function(req, res){
             res.json(rows);
         });
     });
-}
+};
 
 exports.login = function(req, res){
-    if(req.cookies.regId){
-
-    }
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from member where userid = ? and pwd = ?',[req.query.userid, req.query.pwd], function(err, rows) {
             if(rows.length == 1){
@@ -126,7 +123,7 @@ exports.login = function(req, res){
             }
         });
     });
-}
+};
 
 exports.addfriend = function(req, res){
     pool.getConnection(function(err, connection) {
@@ -135,7 +132,7 @@ exports.addfriend = function(req, res){
             res.send(200,'true');
         });
     });
-}
+};
 
 exports.notfriend = function(req, res){
     pool.getConnection(function(err, connection) {
@@ -145,7 +142,7 @@ exports.notfriend = function(req, res){
             res.json(rows);
         });
     });
-}
+};
 
 exports.getimages = function(req, res){
     pool.getConnection(function(err, connection) {
@@ -155,7 +152,7 @@ exports.getimages = function(req, res){
             res.json(rows);
         });
     });
-}
+};
 
 exports.groupmember = function(req, res){
     pool.getConnection(function(err, connection) {
@@ -165,4 +162,14 @@ exports.groupmember = function(req, res){
             res.json(rows);
         });
     });
-}
+};
+
+exports.friendlist = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'select * from member where userid in (select friend_id from friendlist where userid = ?)',[req.query.userid], function(err, rows) {
+            connection.end();
+            res.charset = "utf-8";
+            res.json(rows);
+        });
+    });
+};

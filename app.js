@@ -50,6 +50,7 @@ app.get('/services/login', services.login);
 app.get('/services/addfriend', services.addfriend);
 app.get('/services/getcoords', services.getcoords);
 app.get('/services/groupmember', services.groupmember);
+app.get('/services/friendlist', services.friendlist);
 app.get('/gcm/register', gcm_server.register);
 app.get('/gcm/push', gcm_server.push);
 

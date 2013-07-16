@@ -176,7 +176,7 @@ exports.friendlist = function(req, res){
 
 exports.selectparty = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select party_id,uptodate from party where party_id in (select party_id from member_party where userid = ?)',[req.query.userid], function(err, rows) {
+        connection.query( 'select * from party where party_id in (select party_id from member_party where userid = ?)',[req.query.userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);

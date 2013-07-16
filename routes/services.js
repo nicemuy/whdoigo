@@ -104,13 +104,24 @@ exports.getcoords = function(req, res){
 }
 
 exports.login = function(req, res){
+    if(req.cookies.regId){
+
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from member where userid = ? and pwd = ?',[req.query.userid, req.query.pwd], function(err, rows) {
-            connection.end();
             if(rows.length == 1){
                 req.session.userid = rows[0].userid;
-                res.send(200,'true');
+                if(rows[0].register_id != req.cookies.regId){
+                    connection.query('update member set register_id = ? where userid = ?',[req.cookies.regId,req.query.userid],function(err, rows){
+                        connection.end();
+                        res.send(200,'true');
+                    });
+                }else{
+                    connection.end();
+                    res.send(200,'true');
+                }
             }else{
+                connection.end();
                 res.send(200,'false');
             }
         });

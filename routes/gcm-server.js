@@ -42,7 +42,7 @@ exports.push = function(req, res) {
 
     message.delayWhileIdle = true;
 
-    message.timeToLive = 1;
+    message.timeToLive = 3;
 
 
 // At least one required

@@ -44,6 +44,7 @@ app.get('/services/selectuser', services.selectuser);
 app.post('/services/createshare', services.createshare);
 app.post('/services/addshare', services.addshare);
 app.post('/services/addmember', services.addmember);
+app.get('/services/notfriend', services.notfriend);
 app.get('/services/login', services.login);
 app.get('/services/addfriend', services.addfriend);
 app.get('/services/getcoords', services.getcoords);

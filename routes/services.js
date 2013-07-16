@@ -145,3 +145,13 @@ exports.getimages = function(req, res){
         });
     });
 }
+
+exports.groupmember = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'select * from member_party natural join party where party_id = ?',[req.query.party_id], function(err, rows) {
+            connection.end();
+            res.charset = "utf-8";
+            res.json(rows);
+        });
+    });
+}

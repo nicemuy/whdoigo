@@ -135,3 +135,13 @@ exports.notfriend = function(req, res){
         });
     });
 }
+
+exports.getimages = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'select * from shared where c_id = ?',[req.query.c_id], function(err, rows) {
+            connection.end();
+            res.charset = "utf-8";
+            res.json(rows);
+        });
+    });
+}

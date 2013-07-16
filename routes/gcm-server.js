@@ -19,10 +19,10 @@ exports.register = function (req, res) {
             res.send('true');
         });
     });
-}
+};
 
 
-exports.push = function(req, res) {
+exports.push = function (req, res) {
 
     var message = new gcm.Message();
 
@@ -34,8 +34,8 @@ exports.push = function(req, res) {
     // Optional
 
     message.addDataWithObject({
-       test1:'message1',
-       test2:'message2'
+        test1: 'message1',
+        test2: 'message2'
     });
 
     message.collapseKey = 'demo';
@@ -47,18 +47,18 @@ exports.push = function(req, res) {
 
 // At least one required
 
-    pool.getConnection(function(err, connection) {
+    pool.getConnection(function (err, connection) {
         // Use the connection
-        connection.query( 'SELECT * FROM member natural join member_party where party_id=?', [req.query.party_id], function(err, rows) {
-            for(var index in rows){
+        connection.query('SELECT * FROM member natural join member_party where party_id = ? and ', [req.query.party_id], function (err, rows) {
+            for (var index in rows) {
                 registrationIds.push(rows[index].register_id);
             }
             sender.sendNoRetry(message, registrationIds, function (err, result) {
-                if(err) throw err;
+                if (err) throw err;
                 console.log(result);
                 res.send('true');
             });
         });
     });
-}
+};
 

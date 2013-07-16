@@ -90,12 +90,10 @@ exports.addmember = function(req, res){
         connection.query( 'insert into member values(?,?,?,?,?)', [req.body.userid,req.body.pwd,req.body.name,baseUrl+path.basename(req.files.picture.path),req.cookies.regId],function(err, rows) {
             connection.end();
 
-            console.log(rows);
-
-            if(rows.affectedRows > 0){
-                res.send(200, 'true');
-            }else{
+            if(rows.affectedRows == undefined){
                 res.send(200, 'false');
+            }else{
+                res.send(200, 'true');
             }
         });
     });

@@ -55,6 +55,7 @@ app.get('/services/groupmember', services.groupmember);
 app.get('/services/friendlist', services.friendlist);
 app.get('/gcm/register', gcm_server.register);
 app.get('/gcm/push', gcm_server.push);
+app.get('/services/test2', services.test2);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

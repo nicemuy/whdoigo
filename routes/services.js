@@ -75,9 +75,10 @@ exports.addshare = function(req, res){
             connection.query('INSERT INTO coordinate (sx, sy, location, party_id, memo) VALUES(?, ?, ?, ?, ?)',[req.body.sx,req.body.sy,req.body.location,req.body.party_id,req.body.memo],function(err, rows){
                 c_id = rows.insertId;
                 connection.query('INSERT INTO shared (c_id, picture, picture_memo, up_date) VALUES(?, ?, ?, now())',[c_id,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo],function(err, rows){
-                    console.log('success');
-                    connection.end();
-                    res.send(200,'true');
+                    connection.query('UPDATE member_party SET isnew = true WHERE party_id = ?',[req.body.party_id],function(err, rows){
+                        connection.end();
+                        res.send(200,'true');
+                    });
                 });
             });
         });
@@ -88,7 +89,11 @@ exports.addmember = function(req, res){
     pool.getConnection(function(err, connection) {
         connection.query( 'insert into member values(?,?,?,?,?)', [req.body.userid,req.body.pwd,req.body.name,baseUrl+path.basename(req.files.picture.path),req.cookies.regId],function(err, rows) {
             connection.end();
-            res.send(200,'true');
+            if(rows.affectedRows > 0){
+                res.send(200, 'true');
+            }else{
+                res.send(200, 'false');
+            }
         });
     });
 };
@@ -156,7 +161,7 @@ exports.getimages = function(req, res){
 
 exports.groupmember = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select * from member_party natural join party where party_id = ?',[req.query.party_id], function(err, rows) {
+        connection.query( 'select * from member_party where party_id = ?',[req.query.party_id], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -192,3 +197,13 @@ exports.deletefriend = function(req, res){
         });
     });
 };
+/*
+ { fieldCount: 0,
+ affectedRows: 1,
+ insertId: 14,
+ serverStatus: 2,
+ warningCount: 0,
+ message: '',
+ protocol41: true,
+ changedRows: 0 }
+ */

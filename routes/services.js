@@ -133,7 +133,7 @@ exports.login = function(req, res){
 
 exports.addfriend = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'insert into friendlist(friend_id,userid) values(?,?)',[req.query.friend_id, req.query.userid], function(err, rows) {
+        connection.query( 'insert into friendlist(friend_id,userid) values(?,?)',[req.query.friend_id, req.session.userid], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -142,7 +142,7 @@ exports.addfriend = function(req, res){
 
 exports.notfriend = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select userid,name,photo from member where userid in (select userid from friendlist where friend_id = ? and friend_id not in (select friend_id from friendlist where userid = ?))',[req.query.userid,req.query.userid], function(err, rows) {
+        connection.query( 'select userid,name,photo from member where userid in (select userid from friendlist where friend_id = ? and friend_id not in (select friend_id from friendlist where userid = ?))',[req.session.userid,req.session.userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -162,7 +162,7 @@ exports.getimages = function(req, res){
 
 exports.groupmember = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( "select * from (select party_id,group_concat(userid SEPARATOR ', ') members from member_party where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[req.query.userid,req.query.userid], function(err, rows) {
+        connection.query( "select * from (select party_id,group_concat(userid SEPARATOR ', ') members from member_party where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[req.session.userid,req.session.userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -172,7 +172,7 @@ exports.groupmember = function(req, res){
 
 exports.friendlist = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select * from member where userid in (select friend_id from friendlist where userid = ?)',[req.query.userid], function(err, rows) {
+        connection.query( 'select * from member where userid in (select friend_id from friendlist where userid = ?)',[req.session.userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -182,7 +182,7 @@ exports.friendlist = function(req, res){
 
 exports.selectparty = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select * from party where party_id in (select party_id from member_party where userid = ?)',[req.query.userid], function(err, rows) {
+        connection.query( 'select * from party where party_id in (select party_id from member_party where userid = ?)',[req.session.userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -192,7 +192,7 @@ exports.selectparty = function(req, res){
 
 exports.deletefriend = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'delete from friendlist where userid = ? and friend_id = ?',[req.query.userid,req.query.friend_id], function(err, rows) {
+        connection.query( 'delete from friendlist where userid = ? and friend_id = ?',[req.session.userid,req.query.friend_id], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -220,7 +220,7 @@ exports.deletepicture = function(req, res){
 
 exports.updateread = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'update member_party set isnew = false where party_id = ? and userid = ?', [req.query.party_id ,req.query.userid], function(err, rows) {
+        connection.query( 'update member_party set isnew = false where party_id = ? and userid = ?', [req.query.party_id ,req.session.userid], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -229,7 +229,7 @@ exports.updateread = function(req, res){
 
 exports.outparty = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'delete from member_party where party_id = ? and userid = ?', [req.query.party_id ,req.query.userid], function(err, rows) {
+        connection.query( 'delete from member_party where party_id = ? and userid = ?', [req.query.party_id ,req.session.userid], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });

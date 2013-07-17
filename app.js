@@ -48,6 +48,7 @@ app.get('/services/getimages', services.getimages);
 app.get('/services/notfriend', services.notfriend);
 app.get('/services/login', services.login);
 app.get('/services/deletefriend', services.deletefriend);
+app.get('/services/outparty', services.outparty);
 app.get('/services/deletepicture', services.deletepicture);
 app.get('/services/selectparty', services.selectparty);
 app.get('/services/addfriend', services.addfriend);

@@ -227,6 +227,15 @@ exports.updateread = function(req, res){
     });
 };
 
+exports.outparty = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'delete from member_party where party_id = ? and userid = ?', [req.query.party_id ,req.query.userid], function(err, rows) {
+            connection.end();
+            res.send(200,'true');
+        });
+    });
+};
+
 /*
  { fieldCount: 0,
  affectedRows: 1,

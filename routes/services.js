@@ -55,8 +55,10 @@ exports.createshare = function(req, res){
                             connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.body.userid[j],party_id],function(err, rows){
                                 if(err) throw err;
                                 if(j == req.body.userid.length-1){
-                                    connection.end();
-                                    res.send(200,'true');
+                                    connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.session.userid,party_id],function(err, rows){
+                                        connection.end();
+                                        res.send(200,'true');
+                                    });
                                 }
                             });
                         })();

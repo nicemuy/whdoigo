@@ -218,6 +218,15 @@ exports.deletepicture = function(req, res){
     });
 };
 
+exports.updateread = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'update member_party set isnew = false where party_id = ? and userid = ?', [req.query.party_id ,req.query.userid], function(err, rows) {
+            connection.end();
+            res.send(200,'true');
+        });
+    });
+};
+
 /*
  { fieldCount: 0,
  affectedRows: 1,

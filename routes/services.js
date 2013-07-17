@@ -90,7 +90,7 @@ exports.addmember = function(req, res){
         connection.query( 'insert into member values(?,?,?,?,?)', [req.body.userid,req.body.pwd,req.body.name,baseUrl+path.basename(req.files.picture.path),req.cookies.regId],function(err, rows) {
             connection.end();
 
-            if(rows.affectedRows == undefined){
+            if(rows == undefined){
                 res.send(200, 'false');
             }else{
                 res.send(200, 'true');
@@ -98,7 +98,7 @@ exports.addmember = function(req, res){
         });
     });
 };
-
+//select memo,picture,picture_memo from shared natural join coordinate where s_id='?' and c_id='?'
 exports.getcoords = function(req, res){
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from coordinate where party_id = ?',[req.query.party_id], function(err, rows) {

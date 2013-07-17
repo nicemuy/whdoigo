@@ -198,6 +198,26 @@ exports.deletefriend = function(req, res){
         });
     });
 };
+
+exports.viewpicture = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'select memo,picture,picture_memo from shared natural join coordinate where s_id=? and c_id= ?',[req.query.s_id,req.query.c_id], function(err, rows) {
+            connection.end();
+            res.charset = "utf-8";
+            res.json(rows);
+        });
+    });
+};
+
+exports.deletepicture = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'delete from  shared where s_id=?',[req.query.s_id], function(err, rows) {
+            connection.end();
+            res.send(200,'true');
+        });
+    });
+};
+
 /*
  { fieldCount: 0,
  affectedRows: 1,

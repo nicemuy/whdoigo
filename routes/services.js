@@ -65,11 +65,11 @@ exports.createshare = function(req, res){
                             connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.body.userid[j],party_id],function(err, rows){
                                 if(err) throw err;
                                 if(j == req.body.userid.length-1){
-                                    connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.session.userid,party_id],function(err, rows){
+                                    connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[userid,party_id],function(err, rows){
                                         connection.end();
                                         res.send(200,'true');
                                         console.log('push');
-                                        gcm_push(party_id,req.session.userid);
+                                        gcm_push(party_id,userid);
                                     });
                                 }
                             });
@@ -97,7 +97,7 @@ exports.addshare = function(req, res){
                         connection.end();
                         res.send(200,'true');
                         console.log('push');
-                        gcm_push(req.body.party_id,req.session.userid);
+                        gcm_push(req.body.party_id,userid);
                     });
                 });
             });
@@ -118,7 +118,7 @@ exports.addmember = function(req, res){
         });
     });
 };
-//select memo,picture,picture_memo from shared natural join coordinate where s_id='?' and c_id='?'
+
 exports.getcoords = function(req, res){
     pool.getConnection(function(err, connection) {
         connection.query( 'select *,case c_id when (select c_id from shared where s_id in (select max(s_id) from coordinate natural join shared where party_id = ?)) then true else false end recent from coordinate where party_id = ?',[req.query.party_id,req.query.party_id], function(err, rows) {
@@ -134,21 +134,18 @@ exports.login = function(req, res){
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from member where userid = ? and pwd = ?',[req.query.userid, req.query.pwd], function(err, rows) {
             if(rows.length == 1){
-                req.session.userid = rows[0].userid;
                 if(rows[0].register_id != req.cookies.regId){
                     connection.query('update member set register_id = ? where userid = ?',[req.cookies.regId,req.query.userid],function(err, rows){
                         connection.end();
                         cipher.update(req.query.userid,'utf8','hex');
                         var cypher = cipher.final('hex');
-                        res.set('auth',cypher);
-                        res.send(200,'true');
+                        res.send(200,cypher);
                     });
                 }else{
                     connection.end();
                     cipher.update(req.query.userid,'utf8','hex');
                     var cypher = cipher.final('hex');
-                    res.set('auth',cypher);
-                    res.send(200,'true');
+                    res.send(200,cypher);
                 }
             }else{
                 connection.end();
@@ -164,7 +161,7 @@ exports.addfriend = function(req, res){
         var userid = decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
-        connection.query( 'insert into friendlist(friend_id,userid) values(?,?)',[req.query.friend_id, req.session.userid], function(err, rows) {
+        connection.query( 'insert into friendlist(friend_id,userid) values(?,?)',[req.query.friend_id, userid], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -177,7 +174,7 @@ exports.notfriend = function(req, res){
         var userid = decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
-        connection.query( 'select userid,name,photo from member where userid in (select userid from (select userid from friendlist where friend_id = ?) a left outer join (select friend_id from friendlist where userid = ?) b on (a.userid = b.friend_id) where friend_id is null)',[req.session.userid,req.session.userid], function(err, rows) {
+        connection.query( 'select userid,name,photo from member where userid in (select userid from (select userid from friendlist where friend_id = ?) a left outer join (select friend_id from friendlist where userid = ?) b on (a.userid = b.friend_id) where friend_id is null)',[userid,userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -201,7 +198,7 @@ exports.groupmember = function(req, res){
         var userid = decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
-        connection.query( "select * from (select party_id,group_concat(userid SEPARATOR ', ') members from member_party where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[req.session.userid,req.session.userid], function(err, rows) {
+        connection.query( "select * from (select party_id,group_concat(userid SEPARATOR ', ') members from member_party where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[userid,userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -215,7 +212,7 @@ exports.friendlist = function(req, res){
         var userid = decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
-        connection.query( 'select * from member where userid in (select friend_id from friendlist where userid = ?)',[req.session.userid], function(err, rows) {
+        connection.query( 'select * from member where userid in (select friend_id from friendlist where userid = ?)',[userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -224,8 +221,12 @@ exports.friendlist = function(req, res){
 };
 
 exports.selectparty = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
-        connection.query( 'select * from party where party_id in (select party_id from member_party where userid = ?)',[req.session.userid], function(err, rows) {
+        connection.query( 'select * from party where party_id in (select party_id from member_party where userid = ?)',[userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);
@@ -239,7 +240,7 @@ exports.deletefriend = function(req, res){
         var userid = decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
-        connection.query( 'delete from friendlist where userid = ? and friend_id = ?',[req.session.userid,req.query.friend_id], function(err, rows) {
+        connection.query( 'delete from friendlist where userid = ? and friend_id = ?',[userid,req.query.friend_id], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -271,7 +272,7 @@ exports.updateread = function(req, res){
         var userid = decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
-        connection.query( 'update member_party set isnew = false where party_id = ? and userid = ?', [req.query.party_id ,req.session.userid], function(err, rows) {
+        connection.query( 'update member_party set isnew = false where party_id = ? and userid = ?', [req.query.party_id ,userid], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -284,7 +285,7 @@ exports.outparty = function(req, res){
         var userid = decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
-        connection.query( 'delete from member_party where party_id = ? and userid = ?', [req.query.party_id ,req.session.userid], function(err, rows) {
+        connection.query( 'delete from member_party where party_id = ? and userid = ?', [req.query.party_id ,userid], function(err, rows) {
             connection.end();
             res.send(200,'true');
         });
@@ -301,7 +302,7 @@ exports.sharepicture = function(req, res){
             connection.end();
             res.send(200,'true');
             console.log('push');
-            gcm_push(req.body.party_id,req.session.userid);
+            gcm_push(req.body.party_id,userid);
         });
     });
 };

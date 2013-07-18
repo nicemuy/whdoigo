@@ -159,7 +159,7 @@ exports.addfriend = function(req, res){
 
 exports.notfriend = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select userid,name,photo from member where userid in (select userid from friendlist where friend_id = ? and friend_id not in (select friend_id from friendlist where userid = ?))',[req.session.userid,req.session.userid], function(err, rows) {
+        connection.query( 'select userid,name,photo from member where userid in (select userid from (select userid from friendlist where friend_id = ?) a left outer join (select friend_id from friendlist where userid = ?) b on (a.userid = b.friend_id) where friend_id is null)',[req.session.userid,req.session.userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);

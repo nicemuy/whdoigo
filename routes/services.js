@@ -1,5 +1,7 @@
 var mysql = require('mysql');
 
+var gcm = require('node-gcm');
+
 var baseUrl = 'http://www.alsquare.com:3000/whdoigo/upload/';
 
 var private_key = 'alsquare';

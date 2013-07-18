@@ -129,14 +129,14 @@ exports.login = function(req, res){
                         connection.end();
                         //cipher.update(req.query.userid,'utf8','hex');
                         //var cypher = cipher.final('hex');
-                        res.set('auth',cypher);
+                        //res.set('auth',cypher);
                         res.send(200,'true');
                     });
                 }else{
                     connection.end();
                     //cipher.update(req.query.userid,'utf8','hex');
                     //var cypher = cipher.final('hex');
-                    res.set('auth',cypher);
+                    //res.set('auth',cypher);
                     res.send(200,'true');
                 }
             }else{

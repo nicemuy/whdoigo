@@ -35,9 +35,14 @@ exports.test = function(req, res){
 };
 
 exports.selectuser = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
+        console.log(userid);
+    }
     pool.getConnection(function(err, connection) {
         // Use the connection
-        connection.query( 'SELECT userid,name,photo FROM member where userid like ? or name like ?',['%'+req.query.q+'%','%'+req.query.q+'%'], function(err, rows) {
+        connection.query( 'SELECT userid,name,photo FROM member where userid like ? or name like ? and userid not in (select friend_id from friendlist where userid = ?)',['%'+req.query.q+'%','%'+req.query.q+'%',userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);

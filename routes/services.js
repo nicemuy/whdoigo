@@ -208,7 +208,7 @@ exports.groupmember = function(req, res){
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
-        connection.query( "select * from (select party_id,group_concat(userid SEPARATOR ', ') members from member_party where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[userid,userid], function(err, rows) {
+        connection.query( "select * from (select party_id,group_concat(name SEPARATOR ', ') members from member_party natural join member where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[userid,userid], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);

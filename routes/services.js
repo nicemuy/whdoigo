@@ -14,9 +14,9 @@ var pool = mysql.createPool({
     database:'whdoigo'
 });
 
-var crypto = require('crypto');
-var cipher = crypto.createCipher('aes192', private_key);
-var decipher = crypto.createDecipher('aes192', private_key);
+//var crypto = require('crypto');
+//var cipher = crypto.createCipher('aes192', private_key);
+//var decipher = crypto.createDecipher('aes192', private_key);
 
 
 exports.test = function(req, res){
@@ -127,15 +127,15 @@ exports.login = function(req, res){
                 if(rows[0].register_id != req.cookies.regId){
                     connection.query('update member set register_id = ? where userid = ?',[req.cookies.regId,req.query.userid],function(err, rows){
                         connection.end();
-                        cipher.update(req.query.userid,'utf8','hex');
-                        var cypher = cipher.final('hex');
+                        //cipher.update(req.query.userid,'utf8','hex');
+                        //var cypher = cipher.final('hex');
                         res.set('auth',cypher);
                         res.send(200,'true');
                     });
                 }else{
                     connection.end();
-                    cipher.update(req.query.userid,'utf8','hex');
-                    var cypher = cipher.final('hex');
+                    //cipher.update(req.query.userid,'utf8','hex');
+                    //var cypher = cipher.final('hex');
                     res.set('auth',cypher);
                     res.send(200,'true');
                 }

@@ -16,9 +16,9 @@ var pool = mysql.createPool({
     database:'whdoigo'
 });
 
-//var crypto = require('crypto');
-//var cipher = crypto.createCipher('aes192', private_key);
-//var decipher = crypto.createDecipher('aes192', private_key);
+var crypto = require('crypto');
+var cipher = crypto.createCipher('aes192', private_key);
+var decipher = crypto.createDecipher('aes192', private_key);
 
 
 exports.test = function(req, res){
@@ -48,10 +48,10 @@ exports.selectuser = function(req, res){
 exports.createshare = function(req, res){
     var party_id;
     var c_id;
-    //if(req.get('auth') != undefined || req.get('auth') != ''){
-    //    decipher.update(req.get('auth'),'hex','utf8');
-    //    var userid = decipher.final('utf8');
-    //}
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         // Use the connection
         connection.query( 'insert into party(uptodate) values(null);', function(err, rows) {
@@ -82,6 +82,10 @@ exports.createshare = function(req, res){
 };
 
 exports.addshare = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     var c_id;
     pool.getConnection(function(err, connection) {
         // Use the connection
@@ -134,16 +138,16 @@ exports.login = function(req, res){
                 if(rows[0].register_id != req.cookies.regId){
                     connection.query('update member set register_id = ? where userid = ?',[req.cookies.regId,req.query.userid],function(err, rows){
                         connection.end();
-                        //cipher.update(req.query.userid,'utf8','hex');
-                        //var cypher = cipher.final('hex');
-                        //res.set('auth',cypher);
+                        cipher.update(req.query.userid,'utf8','hex');
+                        var cypher = cipher.final('hex');
+                        res.set('auth',cypher);
                         res.send(200,'true');
                     });
                 }else{
                     connection.end();
-                    //cipher.update(req.query.userid,'utf8','hex');
-                    //var cypher = cipher.final('hex');
-                    //res.set('auth',cypher);
+                    cipher.update(req.query.userid,'utf8','hex');
+                    var cypher = cipher.final('hex');
+                    res.set('auth',cypher);
                     res.send(200,'true');
                 }
             }else{
@@ -155,6 +159,10 @@ exports.login = function(req, res){
 };
 
 exports.addfriend = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'insert into friendlist(friend_id,userid) values(?,?)',[req.query.friend_id, req.session.userid], function(err, rows) {
             connection.end();
@@ -164,6 +172,10 @@ exports.addfriend = function(req, res){
 };
 
 exports.notfriend = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'select userid,name,photo from member where userid in (select userid from (select userid from friendlist where friend_id = ?) a left outer join (select friend_id from friendlist where userid = ?) b on (a.userid = b.friend_id) where friend_id is null)',[req.session.userid,req.session.userid], function(err, rows) {
             connection.end();
@@ -184,6 +196,10 @@ exports.getimages = function(req, res){
 };
 
 exports.groupmember = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( "select * from (select party_id,group_concat(userid SEPARATOR ', ') members from member_party where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[req.session.userid,req.session.userid], function(err, rows) {
             connection.end();
@@ -194,6 +210,10 @@ exports.groupmember = function(req, res){
 };
 
 exports.friendlist = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from member where userid in (select friend_id from friendlist where userid = ?)',[req.session.userid], function(err, rows) {
             connection.end();
@@ -214,6 +234,10 @@ exports.selectparty = function(req, res){
 };
 
 exports.deletefriend = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'delete from friendlist where userid = ? and friend_id = ?',[req.session.userid,req.query.friend_id], function(err, rows) {
             connection.end();
@@ -242,6 +266,10 @@ exports.deletepicture = function(req, res){
 };
 
 exports.updateread = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'update member_party set isnew = false where party_id = ? and userid = ?', [req.query.party_id ,req.session.userid], function(err, rows) {
             connection.end();
@@ -251,6 +279,10 @@ exports.updateread = function(req, res){
 };
 
 exports.outparty = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'delete from member_party where party_id = ? and userid = ?', [req.query.party_id ,req.session.userid], function(err, rows) {
             connection.end();
@@ -260,6 +292,10 @@ exports.outparty = function(req, res){
 };
 
 exports.sharepicture = function(req, res){
+    if(req.get('auth') != undefined && req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         connection.query( 'insert into shared(c_id,picture,picture_memo,up_date) values(?,?,?,now())', [req.body.c_id ,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo], function(err, rows) {
             connection.end();

@@ -111,7 +111,7 @@ exports.addmember = function(req, res){
 //select memo,picture,picture_memo from shared natural join coordinate where s_id='?' and c_id='?'
 exports.getcoords = function(req, res){
     pool.getConnection(function(err, connection) {
-        connection.query( 'select * from coordinate where party_id = ?',[req.query.party_id], function(err, rows) {
+        connection.query( 'select *,case c_id when (select c_id from shared where s_id in (select max(s_id) from shared)) then true else false end recent from coordinate where party_id = ?',[req.query.party_id], function(err, rows) {
             connection.end();
             res.charset = "utf-8";
             res.json(rows);

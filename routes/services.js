@@ -51,6 +51,7 @@ exports.createshare = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         // Use the connection
@@ -85,6 +86,7 @@ exports.addshare = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     var c_id;
     pool.getConnection(function(err, connection) {
@@ -159,6 +161,7 @@ exports.addfriend = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'insert into friendlist(friend_id,userid) values(?,?)',[req.query.friend_id, userid], function(err, rows) {
@@ -196,6 +199,7 @@ exports.groupmember = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         connection.query( "select * from (select party_id,group_concat(userid SEPARATOR ', ') members from member_party where party_id in (select party_id from member_party where userid = ?) group by party_id) a natural join (select party_id,isnew from member_party where userid = ?) b order by isnew desc",[userid,userid], function(err, rows) {
@@ -210,6 +214,7 @@ exports.friendlist = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from member where userid in (select friend_id from friendlist where userid = ?)',[userid], function(err, rows) {
@@ -224,6 +229,7 @@ exports.selectparty = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'select * from party where party_id in (select party_id from member_party where userid = ?)',[userid], function(err, rows) {
@@ -270,6 +276,7 @@ exports.updateread = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'update member_party set isnew = false where party_id = ? and userid = ?', [req.query.party_id ,userid], function(err, rows) {
@@ -283,6 +290,7 @@ exports.outparty = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'delete from member_party where party_id = ? and userid = ?', [req.query.party_id ,userid], function(err, rows) {
@@ -296,6 +304,7 @@ exports.sharepicture = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
+        console.log(userid);
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'insert into shared(c_id,picture,picture_memo,up_date) values(?,?,?,now())', [req.body.c_id ,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo], function(err, rows) {

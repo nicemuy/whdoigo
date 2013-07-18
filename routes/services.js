@@ -140,13 +140,13 @@ exports.login = function(req, res){
                     connection.query('update member set register_id = ? where userid = ?',[req.cookies.regId,req.query.userid],function(err, rows){
                         connection.end();
                         cipher.update(req.query.userid,'utf8','hex');
-                        var cypher = cipher.final('hex');
+                        var cypher = req.query.userid;//cipher.final('hex');
                         res.send(200,cypher);
                     });
                 }else{
                     connection.end();
                     cipher.update(req.query.userid,'utf8','hex');
-                    var cypher = cipher.final('hex');
+                    var cypher = req.query.userid;//cipher.final('hex');
                     res.send(200,cypher);
                 }
             }else{
@@ -198,8 +198,8 @@ exports.getimages = function(req, res){
 exports.groupmember = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
         console.log(req.get('auth'));
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
@@ -213,8 +213,8 @@ exports.groupmember = function(req, res){
 
 exports.friendlist = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {

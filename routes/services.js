@@ -46,10 +46,10 @@ exports.selectuser = function(req, res){
 exports.createshare = function(req, res){
     var party_id;
     var c_id;
-    if(req.get('auth') != undefined || req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
-    }
+    //if(req.get('auth') != undefined || req.get('auth') != ''){
+    //    decipher.update(req.get('auth'),'hex','utf8');
+    //    var userid = decipher.final('utf8');
+    //}
     pool.getConnection(function(err, connection) {
         // Use the connection
         connection.query( 'insert into party(uptodate) values(null);', function(err, rows) {

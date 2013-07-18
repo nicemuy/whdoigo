@@ -252,6 +252,15 @@ exports.outparty = function(req, res){
     });
 };
 
+exports.sharepicture = function(req, res){
+    pool.getConnection(function(err, connection) {
+        connection.query( 'insert into shared(c_id,picture,picture_memo,up_date) values(?,?,?,now())', [req.body.c_id ,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo], function(err, rows) {
+            connection.end();
+            res.send(200,'true');
+        });
+    });
+};
+
 /*
  { fieldCount: 0,
  affectedRows: 1,

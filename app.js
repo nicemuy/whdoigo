@@ -57,6 +57,7 @@ app.get('/services/groupmember', services.groupmember);
 app.get('/services/friendlist', services.friendlist);
 app.get('/services/viewpicture', services.viewpicture);
 app.get('/services/updateread', services.updateread);
+app.post('/services/sharepicture', services.sharepicture);
 app.get('/gcm/register', gcm_server.register);
 app.get('/gcm/push', gcm_server.push);
 

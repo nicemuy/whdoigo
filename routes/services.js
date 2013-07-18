@@ -302,7 +302,7 @@ function gcm_push(party_id,userid){
             for (var index in rows) {
                 registrationIds.push(rows[index].register_id);
             }
-            sender.sendNoRetry(message, registrationIds, function (err, result) {
+            sender.send(message, registrationIds, 4,function (err, result) {
                 if (err) throw err;
             });
         });

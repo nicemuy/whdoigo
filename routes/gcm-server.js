@@ -53,7 +53,7 @@ exports.push = function (req, res) {
             for (var index in rows) {
                 registrationIds.push(rows[index].register_id);
             }
-            sender.sendNoRetry(message, registrationIds, function (err, result) {
+            sender.sendNoRetry(message, registrationIds, 4,function (err, result) {
                 if (err) throw err;
                 console.log(result);
                 res.send('true');

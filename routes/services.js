@@ -197,6 +197,7 @@ exports.getimages = function(req, res){
 
 exports.groupmember = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
+        console.log(req.get('auth'));
         decipher.update(req.get('auth'),'hex','utf8');
         var userid = decipher.final('utf8');
         console.log(userid);

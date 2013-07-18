@@ -66,6 +66,8 @@ exports.createshare = function(req, res){
                                     connection.query('INSERT INTO member_party (userid, party_id) VALUES(?,?)',[req.session.userid,party_id],function(err, rows){
                                         connection.end();
                                         res.send(200,'true');
+                                        console.log('push');
+                                        gcm_push(party_id,req.session.userid);
                                     });
                                 }
                             });
@@ -88,6 +90,8 @@ exports.addshare = function(req, res){
                     connection.query('UPDATE member_party SET isnew = true WHERE party_id = ?',[req.body.party_id],function(err, rows){
                         connection.end();
                         res.send(200,'true');
+                        console.log('push');
+                        gcm_push(req.body.party_id,req.session.userid);
                     });
                 });
             });
@@ -258,9 +262,52 @@ exports.sharepicture = function(req, res){
         connection.query( 'insert into shared(c_id,picture,picture_memo,up_date) values(?,?,?,now())', [req.body.c_id ,baseUrl+path.basename(req.files.picture.path),req.body.picture_memo], function(err, rows) {
             connection.end();
             res.send(200,'true');
+            console.log('push');
+            gcm_push(req.body.party_id,req.session.userid);
         });
     });
 };
+
+
+function gcm_push(party_id,userid){
+
+    var message = new gcm.Message();
+
+    var sender = new gcm.Sender('AIzaSyA7sfNlKbcyxhVDr-35d7VB4QMOC1Y0dY0');
+
+    var registrationIds = [];
+
+
+    // Optional
+
+    message.addDataWithObject({
+        test1: 'message1',
+        test2: 'message2'
+    });
+
+    message.collapseKey = 'demo';
+
+    message.delayWhileIdle = true;
+
+    message.timeToLive = 3;
+
+
+// At least one required
+
+    pool.getConnection(function (err, connection) {
+        // Use the connection
+        connection.query('SELECT * FROM member natural join member_party where party_id = ? and userid != ?', [party_id,userid], function (err, rows) {
+            for (var index in rows) {
+                registrationIds.push(rows[index].register_id);
+            }
+            sender.sendNoRetry(message, registrationIds, function (err, result) {
+                if (err) throw err;
+                console.log(result);
+                res.send('true');
+            });
+        });
+    });
+}
 
 /*
  { fieldCount: 0,

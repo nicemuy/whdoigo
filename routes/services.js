@@ -2,6 +2,8 @@ var mysql = require('mysql');
 
 var baseUrl = 'http://www.alsquare.com:3000/whdoigo/upload/';
 
+var private_key = 'alsquare';
+
 var path = require('path');
 
 var pool = mysql.createPool({
@@ -12,7 +14,9 @@ var pool = mysql.createPool({
     database:'whdoigo'
 });
 
-
+var crypto = require('crypto');
+var cipher = crypto.createCipher('aes192', private_key);
+var decipher = crypto.createDecipher('aes192', private_key);
 
 
 exports.test = function(req, res){
@@ -42,6 +46,10 @@ exports.selectuser = function(req, res){
 exports.createshare = function(req, res){
     var party_id;
     var c_id;
+    if(req.get('auth') != undefined || req.get('auth') != ''){
+        decipher.update(req.get('auth'),'hex','utf8');
+        var userid = decipher.final('utf8');
+    }
     pool.getConnection(function(err, connection) {
         // Use the connection
         connection.query( 'insert into party(uptodate) values(null);', function(err, rows) {
@@ -119,10 +127,16 @@ exports.login = function(req, res){
                 if(rows[0].register_id != req.cookies.regId){
                     connection.query('update member set register_id = ? where userid = ?',[req.cookies.regId,req.query.userid],function(err, rows){
                         connection.end();
+                        cipher.update(req.query.userid,'utf8','hex');
+                        var cypher = cipher.final('hex');
+                        res.set('auth',cypher);
                         res.send(200,'true');
                     });
                 }else{
                     connection.end();
+                    cipher.update(req.query.userid,'utf8','hex');
+                    var cypher = cipher.final('hex');
+                    res.set('auth',cypher);
                     res.send(200,'true');
                 }
             }else{

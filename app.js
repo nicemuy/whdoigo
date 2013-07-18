@@ -26,7 +26,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser({keepExtensions:true,uploadDir: __dirname+'/public/upload'}));
 app.use(express.methodOverride());
 app.use(express.cookieParser('whdoigo'));
-app.use(express.session());
+app.use(express.session({cookie:{maxAge:3600000}}));
 app.use('/whdoigo',app.router);
 app.use('/whdoigo',express.static(path.join(__dirname, 'public')));
 

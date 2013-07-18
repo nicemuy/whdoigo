@@ -49,8 +49,8 @@ exports.createshare = function(req, res){
     var party_id;
     var c_id;
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
@@ -84,8 +84,8 @@ exports.createshare = function(req, res){
 
 exports.addshare = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     var c_id;
@@ -159,8 +159,8 @@ exports.login = function(req, res){
 
 exports.addfriend = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
@@ -173,8 +173,8 @@ exports.addfriend = function(req, res){
 
 exports.notfriend = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'select userid,name,photo from member where userid in (select userid from (select userid from friendlist where friend_id = ?) a left outer join (select friend_id from friendlist where userid = ?) b on (a.userid = b.friend_id) where friend_id is null)',[userid,userid], function(err, rows) {
@@ -228,8 +228,8 @@ exports.friendlist = function(req, res){
 
 exports.selectparty = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
@@ -243,8 +243,8 @@ exports.selectparty = function(req, res){
 
 exports.deletefriend = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
     }
     pool.getConnection(function(err, connection) {
         connection.query( 'delete from friendlist where userid = ? and friend_id = ?',[userid,req.query.friend_id], function(err, rows) {
@@ -275,8 +275,8 @@ exports.deletepicture = function(req, res){
 
 exports.updateread = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
@@ -289,8 +289,8 @@ exports.updateread = function(req, res){
 
 exports.outparty = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
@@ -303,8 +303,8 @@ exports.outparty = function(req, res){
 
 exports.sharepicture = function(req, res){
     if(req.get('auth') != undefined && req.get('auth') != ''){
-        decipher.update(req.get('auth'),'hex','utf8');
-        var userid = decipher.final('utf8');
+        //decipher.update(req.get('auth'),'hex','utf8');
+        var userid = req.get('auth');//decipher.final('utf8');
         console.log(userid);
     }
     pool.getConnection(function(err, connection) {
